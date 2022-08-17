@@ -2,6 +2,8 @@ const fs = require('fs');
 const http = require('http');
 const url = require('url');
 
+const replaceTemplate = require('./modules/replaceTemplate')
+
 
 const data = fs.readFileSync(`${__dirname}/dev-data/data.json`, 'utf-8');
 
@@ -48,4 +50,4 @@ const server = http.createServer((req, res) => {
 
 })
 
-server.listen(8080, console.log("Server started"))
+server.listen(8088, console.log("Server started"))
