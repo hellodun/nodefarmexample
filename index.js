@@ -14,7 +14,38 @@ const tempProduct = fs.readFileSync(`${__dirname}//templates/template-product.ht
 const jsonData = JSON.parse(data);
 
 const server = http.createServer((req, res) => {
-  res.end("Response from server")
+
+  const { query, pathname } = url.parse(req.url, true);
+
+  // Overview page
+  if (pathname === "/" || pathname === "/overview") {
+    res.writeHead(200, {
+      "Content-type": "text/html"
+    });
+
+    const cardHtml = jsonData.map(element => replaceTemplate(tempCard, element)).join("");
+    const output = tempOverview.replace('{%PRODUCT_CARDS%}', cardHtml)
+
+    res.end(output)
+
+    // Product Page
+  } else if (pathname === "/product") {
+    const product = jsonData[query.id];
+    const output = replaceTemplate(tempProduct, product);
+    res.writeHead(200, {
+      "Content-type": "text/html",
+    });
+
+    res.end(output);
+
+    // Error page
+  } else {
+    res.writeHead(404, {
+      "Content-type": "text/html"
+    });
+    res.end("<h1> Sorry\nPage Not Found </h1>")
+  }
+
 })
 
 server.listen(8080, console.log("Server started"))
